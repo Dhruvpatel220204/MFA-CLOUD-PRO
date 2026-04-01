@@ -14,7 +14,176 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      devices: {
+        Row: {
+          browser: string | null
+          created_at: string
+          device_fingerprint: string
+          id: string
+          ip_address: string | null
+          is_trusted: boolean
+          last_seen: string
+          location: string | null
+          os: string | null
+          trust_score: number
+          user_id: string
+        }
+        Insert: {
+          browser?: string | null
+          created_at?: string
+          device_fingerprint: string
+          id?: string
+          ip_address?: string | null
+          is_trusted?: boolean
+          last_seen?: string
+          location?: string | null
+          os?: string | null
+          trust_score?: number
+          user_id: string
+        }
+        Update: {
+          browser?: string | null
+          created_at?: string
+          device_fingerprint?: string
+          id?: string
+          ip_address?: string | null
+          is_trusted?: boolean
+          last_seen?: string
+          location?: string | null
+          os?: string | null
+          trust_score?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
+      login_attempts: {
+        Row: {
+          browser: string | null
+          created_at: string
+          email: string
+          failure_reason: string | null
+          id: string
+          ip_address: string | null
+          location: string | null
+          os: string | null
+          risk_level: string
+          success: boolean
+          user_id: string | null
+        }
+        Insert: {
+          browser?: string | null
+          created_at?: string
+          email: string
+          failure_reason?: string | null
+          id?: string
+          ip_address?: string | null
+          location?: string | null
+          os?: string | null
+          risk_level?: string
+          success?: boolean
+          user_id?: string | null
+        }
+        Update: {
+          browser?: string | null
+          created_at?: string
+          email?: string
+          failure_reason?: string | null
+          id?: string
+          ip_address?: string | null
+          location?: string | null
+          os?: string | null
+          risk_level?: string
+          success?: boolean
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          backup_codes: string[] | null
+          created_at: string
+          display_name: string | null
+          id: string
+          mfa_enabled: boolean
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          backup_codes?: string[] | null
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          mfa_enabled?: boolean
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          avatar_url?: string | null
+          backup_codes?: string[] | null
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          mfa_enabled?: boolean
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_sessions: {
+        Row: {
+          browser: string | null
+          created_at: string
+          device_id: string | null
+          expires_at: string
+          id: string
+          ip_address: string | null
+          is_active: boolean
+          last_active: string
+          location: string | null
+          os: string | null
+          session_token: string
+          user_id: string
+        }
+        Insert: {
+          browser?: string | null
+          created_at?: string
+          device_id?: string | null
+          expires_at?: string
+          id?: string
+          ip_address?: string | null
+          is_active?: boolean
+          last_active?: string
+          location?: string | null
+          os?: string | null
+          session_token: string
+          user_id: string
+        }
+        Update: {
+          browser?: string | null
+          created_at?: string
+          device_id?: string | null
+          expires_at?: string
+          id?: string
+          ip_address?: string | null
+          is_active?: boolean
+          last_active?: string
+          location?: string | null
+          os?: string | null
+          session_token?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_sessions_device_id_fkey"
+            columns: ["device_id"]
+            isOneToOne: false
+            referencedRelation: "devices"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
