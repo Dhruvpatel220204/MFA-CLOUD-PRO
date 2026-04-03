@@ -67,9 +67,9 @@ export default function Auth() {
           >
             <Shield className="w-8 h-8 text-primary" />
           </motion.div>
-          <h1 className="text-2xl font-bold text-foreground">SecureGuard MFA</h1>
+          <h1 className="text-2xl font-bold text-foreground">Multi Factor Cloud Authentication</h1>
           <p className="text-muted-foreground text-sm mt-1">
-            Multi-Factor Authentication Security System
+            Adaptive Cloud Authentication Platform
           </p>
         </div>
 

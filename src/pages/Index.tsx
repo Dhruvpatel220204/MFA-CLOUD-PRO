@@ -12,7 +12,7 @@ const Index = () => {
     );
   }
 
-  if (!user) return <Navigate to="/auth" replace />;
+  if (!user) return <Navigate to="/landing" replace />;
   return <Navigate to="/dashboard" replace />;
 };
 
