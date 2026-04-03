@@ -45,7 +45,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const signIn = async (email: string, password: string) => {
-    const device = getDeviceFingerprint();
+    const device = getDeviceInfo();
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
     // Log the attempt regardless of success/failure
