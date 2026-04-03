@@ -1,7 +1,7 @@
 import { useState, useEffect, createContext, useContext } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
-import { getDeviceFingerprint } from '@/lib/device-fingerprint';
+import { getDeviceInfo } from '@/lib/device-fingerprint';
 
 interface AuthContextType {
   user: User | null;
