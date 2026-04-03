@@ -102,6 +102,41 @@ export default function Dashboard() {
     loadData();
   }, [user, loadData]);
 
+  // Realtime: listen for failed login attempts
+  useEffect(() => {
+    if (!user) return;
+
+    const channel = supabase
+      .channel('failed-login-alerts')
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'login_attempts',
+          filter: `user_id=eq.${user.id}`,
+        },
+        (payload) => {
+          const attempt = payload.new as any;
+          if (!attempt.success) {
+            toast.error('⚠️ Failed Login Attempt Detected!', {
+              description: `${attempt.browser || 'Unknown browser'} / ${attempt.os || 'Unknown OS'} — ${attempt.failure_reason || 'Invalid credentials'}`,
+              duration: 8000,
+            });
+            // Add to local state immediately
+            setLoginAttempts(prev => [attempt, ...prev]);
+          } else {
+            setLoginAttempts(prev => [attempt, ...prev]);
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [user]);
+
   const handleSignOut = async () => {
     await signOut();
     navigate('/auth');
