@@ -114,7 +114,7 @@ export default function Dashboard() {
           event: 'INSERT',
           schema: 'public',
           table: 'login_attempts',
-          filter: `user_id=eq.${user.id}`,
+          filter: `email=eq.${user.email}`,
         },
         (payload) => {
           const attempt = payload.new as any;
