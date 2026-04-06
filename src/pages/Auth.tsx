@@ -95,7 +95,50 @@ export default function Auth() {
     toast.info('New OTP generated.');
   };
 
-  return (
+  const handleRecoveryCodeVerify = async () => {
+    setRecoveryVerifying(true);
+    try {
+      const { data: session } = await supabase.auth.getSession();
+      const userId = session?.session?.user?.id;
+      if (!userId) {
+        toast.error('Session expired. Please log in again.');
+        setShowOTP(false);
+        setUseRecoveryCode(false);
+        return;
+      }
+
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('backup_codes')
+        .eq('user_id', userId)
+        .single();
+
+      const codes: string[] = profile?.backup_codes || [];
+      const normalizedInput = recoveryCode.trim().toUpperCase();
+      const matchIndex = codes.findIndex(c => c === normalizedInput);
+
+      if (matchIndex === -1) {
+        toast.error('Invalid recovery code. Please try again.');
+        setRecoveryCode('');
+        return;
+      }
+
+      // Remove used code
+      const updatedCodes = codes.filter((_, i) => i !== matchIndex);
+      await supabase
+        .from('profiles')
+        .update({ backup_codes: updatedCodes })
+        .eq('user_id', userId);
+
+      toast.success(`Recovery code accepted! ${updatedCodes.length} codes remaining.`);
+      setTimeout(() => navigate('/'), 800);
+    } catch {
+      toast.error('Something went wrong. Try again.');
+    } finally {
+      setRecoveryVerifying(false);
+    }
+  };
+
     <div className="min-h-screen bg-background flex items-center justify-center p-4 scan-line">
       {/* Background grid */}
       <div className="fixed inset-0 opacity-[0.03]" style={{
