@@ -139,6 +139,7 @@ export default function Auth() {
     }
   };
 
+  return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4 scan-line">
       {/* Background grid */}
       <div className="fixed inset-0 opacity-[0.03]" style={{
