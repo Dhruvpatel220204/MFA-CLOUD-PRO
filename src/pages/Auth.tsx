@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
+import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Shield, Eye, EyeOff, Lock, Mail, User, KeyRound, RefreshCw } from 'lucide-react';
+import { Shield, Eye, EyeOff, Lock, Mail, User, KeyRound, RefreshCw, ShieldAlert } from 'lucide-react';
 
 function generateOTP(): string {
   return Math.floor(100000 + Math.random() * 900000).toString();
