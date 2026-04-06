@@ -31,6 +31,11 @@ export default function Auth() {
   const [otpExpiry, setOtpExpiry] = useState(60);
   const [otpVerifying, setOtpVerifying] = useState(false);
 
+  // Recovery code state
+  const [useRecoveryCode, setUseRecoveryCode] = useState(false);
+  const [recoveryCode, setRecoveryCode] = useState('');
+  const [recoveryVerifying, setRecoveryVerifying] = useState(false);
+
   // Countdown timer for OTP
   useEffect(() => {
     if (!showOTP || otpExpiry <= 0) return;
