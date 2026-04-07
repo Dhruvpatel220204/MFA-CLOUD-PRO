@@ -221,7 +221,6 @@ export default function Dashboard() {
           <SecurityOverview
             mfaEnabled={profile?.mfa_enabled || false}
             totalDevices={devices.length}
-            recentAlerts={recentAlerts}
             totalLogins={loginAttempts.length}
             failedLogins={failedLogins}
           />
