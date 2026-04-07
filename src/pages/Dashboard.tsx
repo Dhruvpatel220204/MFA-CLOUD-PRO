@@ -29,7 +29,7 @@ export default function Dashboard() {
     const [profileRes, devicesRes, loginsRes, sessionsRes] = await Promise.all([
       supabase.from('profiles').select('*').eq('user_id', user.id).single(),
       supabase.from('devices').select('*').eq('user_id', user.id).order('last_seen', { ascending: false }),
-      supabase.from('login_attempts').select('*').eq('user_id', user.id).order('created_at', { ascending: false }).limit(50),
+      supabase.from('login_attempts').select('*').or(`user_id.eq.${user.id},email.eq.${user.email}`).order('created_at', { ascending: false }).limit(50),
       supabase.from('user_sessions').select('*').eq('user_id', user.id).order('last_active', { ascending: false }),
     ]);
 
