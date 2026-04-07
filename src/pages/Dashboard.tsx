@@ -178,7 +178,6 @@ export default function Dashboard() {
   };
 
   const failedLogins = loginAttempts.filter(a => !a.success).length;
-  const recentAlerts = loginAttempts.filter(a => a.risk_level !== 'low' && new Date(a.created_at) > new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)).length;
 
   return (
     <div className="min-h-screen bg-background scan-line">
@@ -222,7 +221,6 @@ export default function Dashboard() {
           <SecurityOverview
             mfaEnabled={profile?.mfa_enabled || false}
             totalDevices={devices.length}
-            recentAlerts={recentAlerts}
             totalLogins={loginAttempts.length}
             failedLogins={failedLogins}
           />

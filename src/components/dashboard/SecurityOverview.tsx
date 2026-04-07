@@ -4,12 +4,11 @@ import { Shield, Fingerprint, Activity, AlertTriangle, Lock, Smartphone } from '
 interface SecurityOverviewProps {
   mfaEnabled: boolean;
   totalDevices: number;
-  recentAlerts: number;
   totalLogins: number;
   failedLogins: number;
 }
 
-export default function SecurityOverview({ mfaEnabled, totalDevices, recentAlerts, totalLogins, failedLogins }: SecurityOverviewProps) {
+export default function SecurityOverview({ mfaEnabled, totalDevices, totalLogins, failedLogins }: SecurityOverviewProps) {
   const stats = [
     {
       label: 'MFA Status',
@@ -26,11 +25,11 @@ export default function SecurityOverview({ mfaEnabled, totalDevices, recentAlert
       bg: 'bg-accent/10',
     },
     {
-      label: 'Alerts',
-      value: recentAlerts.toString(),
+      label: 'Failed Attempts',
+      value: failedLogins.toString(),
       icon: AlertTriangle,
-      color: recentAlerts > 0 ? 'text-warning' : 'text-success',
-      bg: recentAlerts > 0 ? 'bg-warning/10' : 'bg-success/10',
+      color: failedLogins > 0 ? 'text-destructive' : 'text-success',
+      bg: failedLogins > 0 ? 'bg-destructive/10' : 'bg-success/10',
     },
     {
       label: 'Login Success',
