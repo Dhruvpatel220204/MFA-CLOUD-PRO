@@ -243,12 +243,18 @@ export default function Dashboard() {
           </motion.div>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-6">
+        <div className="grid lg:grid-cols-3 gap-6">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
-            <LoginHistoryCard attempts={loginAttempts} />
+            <FailedAttemptsCard attempts={failedAttempts} />
           </motion.div>
 
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="lg:col-span-2">
+            <LoginHistoryCard attempts={loginAttempts} />
+          </motion.div>
+        </div>
+
+        <div className="grid lg:grid-cols-2 gap-6">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.45 }}>
             <DevicesCard
               devices={devices}
               onRemoveDevice={handleRemoveDevice}
