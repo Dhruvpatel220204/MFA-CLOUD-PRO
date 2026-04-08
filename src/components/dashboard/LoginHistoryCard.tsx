@@ -9,6 +9,7 @@ interface LoginAttempt {
   os: string | null;
   location: string | null;
   risk_level: string;
+  failure_reason?: string | null;
   created_at: string;
 }
 
@@ -53,7 +54,7 @@ export default function LoginHistoryCard({ attempts }: LoginHistoryCardProps) {
                   </span>
                   <RiskBadge level={attempt.risk_level} />
                 </div>
-                <div className="flex items-center gap-3 text-xs text-muted-foreground mt-1">
+                <div className="flex items-center gap-3 text-xs text-muted-foreground mt-1 flex-wrap">
                   <span className="flex items-center gap-1">
                     <Monitor className="w-3 h-3" />
                     {attempt.browser || 'Unknown'} / {attempt.os || 'Unknown'}
@@ -62,6 +63,11 @@ export default function LoginHistoryCard({ attempts }: LoginHistoryCardProps) {
                     <Globe className="w-3 h-3" />
                     {attempt.ip_address || 'N/A'}
                   </span>
+                  {!attempt.success && attempt.failure_reason ? (
+                    <span className="truncate max-w-full text-destructive/90">
+                      {attempt.failure_reason}
+                    </span>
+                  ) : null}
                 </div>
               </div>
 
