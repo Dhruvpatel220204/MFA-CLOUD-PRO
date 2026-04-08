@@ -54,13 +54,32 @@ export default function Auth() {
         if (error) {
           toast.error(error.message);
         } else {
-          // Password correct → show OTP step
-          const otp = generateOTP();
-          setGeneratedOTP(otp);
-          setEnteredOTP('');
-          setOtpExpiry(60);
-          setShowOTP(true);
-          toast.success('Credentials verified. Enter the OTP to continue.');
+          // Check if user has MFA enabled
+          const { data: session } = await supabase.auth.getSession();
+          const userId = session?.session?.user?.id;
+          let mfaEnabled = false;
+          if (userId) {
+            const { data: profile } = await supabase
+              .from('profiles')
+              .select('mfa_enabled')
+              .eq('user_id', userId)
+              .single();
+            mfaEnabled = profile?.mfa_enabled || false;
+          }
+
+          if (mfaEnabled) {
+            // MFA enabled → show OTP step
+            const otp = generateOTP();
+            setGeneratedOTP(otp);
+            setEnteredOTP('');
+            setOtpExpiry(60);
+            setShowOTP(true);
+            toast.success('Credentials verified. Enter the OTP to continue.');
+          } else {
+            // MFA disabled → direct login
+            toast.success('Login successful!');
+            navigate('/');
+          }
         }
       } else {
         const { error } = await signUp(email, password, displayName);
