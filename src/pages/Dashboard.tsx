@@ -179,6 +179,7 @@ export default function Dashboard() {
   };
 
   const failedLogins = loginAttempts.filter(a => !a.success).length;
+  const failedAttempts = loginAttempts.filter(a => !a.success);
 
   return (
     <div className="min-h-screen bg-background scan-line">
