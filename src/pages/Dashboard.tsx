@@ -13,6 +13,7 @@ import DevicesCard from '@/components/dashboard/DevicesCard';
 import ActiveSessionsCard from '@/components/dashboard/ActiveSessionsCard';
 import SecurityOverview from '@/components/dashboard/SecurityOverview';
 import MFAToggleCard from '@/components/dashboard/MFAToggleCard';
+import FailedAttemptsCard from '@/components/dashboard/FailedAttemptsCard';
 
 export default function Dashboard() {
   const { user, signOut } = useAuth();

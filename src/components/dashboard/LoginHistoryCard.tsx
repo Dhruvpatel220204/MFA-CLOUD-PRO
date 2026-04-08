@@ -9,6 +9,7 @@ interface LoginAttempt {
   os: string | null;
   location: string | null;
   risk_level: string;
+  failure_reason?: string | null;
   created_at: string;
 }
 
