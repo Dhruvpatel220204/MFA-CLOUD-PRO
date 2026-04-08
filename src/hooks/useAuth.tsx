@@ -3,6 +3,24 @@ import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { getDeviceInfo } from '@/lib/device-fingerprint';
 
+async function logLoginAttempt(payload: {
+  email: string;
+  user_id: string | null;
+  success: boolean;
+  failure_reason: string | null;
+  risk_level: string;
+  browser: string | null;
+  os: string | null;
+  ip_address: string | null;
+  location: string | null;
+}) {
+  const { error } = await supabase.from('login_attempts').insert(payload);
+
+  if (error) {
+    console.error('Failed to log login attempt', error);
+  }
+}
+
 interface AuthContextType {
   user: User | null;
   session: Session | null;
@@ -46,11 +64,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signIn = async (email: string, password: string) => {
     const device = getDeviceInfo();
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-
-    // Log the attempt regardless of success/failure
     try {
-      await supabase.from('login_attempts').insert({
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+
+      await logLoginAttempt({
         email,
         user_id: data?.user?.id ?? null,
         success: !error,
@@ -61,11 +78,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         ip_address: null,
         location: null,
       });
-    } catch (e) {
-      console.error('Failed to log login attempt', e);
-    }
 
-    return { error: error as Error | null };
+      return { error: error as Error | null };
+    } catch (error) {
+      const normalizedError = error instanceof Error
+        ? error
+        : new Error('Authentication request failed. Please try again.');
+
+      await logLoginAttempt({
+        email,
+        user_id: null,
+        success: false,
+        failure_reason: normalizedError.message,
+        risk_level: 'high',
+        browser: device.browser,
+        os: device.os,
+        ip_address: null,
+        location: null,
+      });
+
+      return { error: normalizedError };
+    }
   };
 
   const signOut = async () => {
