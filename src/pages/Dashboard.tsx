@@ -53,7 +53,18 @@ export default function Dashboard() {
       accountAge,
     });
     setTrustScore(score);
-  }, [user]);
+
+    // Auto-purge: if trust score < 60, remove all devices & sessions and force re-login
+    if (score.score < 60) {
+      toast.error('⚠️ Trust score critically low! Clearing all devices and sessions for security.', { duration: 5000 });
+      await Promise.all([
+        supabase.from('devices').delete().eq('user_id', user.id),
+        supabase.from('user_sessions').update({ is_active: false }).eq('user_id', user.id),
+      ]);
+      await signOut();
+      navigate('/auth');
+    }
+  }, [user, signOut, navigate]);
 
   // Register current device on login
   useEffect(() => {
