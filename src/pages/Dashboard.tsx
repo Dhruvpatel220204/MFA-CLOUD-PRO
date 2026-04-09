@@ -13,7 +13,6 @@ import DevicesCard from '@/components/dashboard/DevicesCard';
 import ActiveSessionsCard from '@/components/dashboard/ActiveSessionsCard';
 import SecurityOverview from '@/components/dashboard/SecurityOverview';
 import MFAToggleCard from '@/components/dashboard/MFAToggleCard';
-import FailedAttemptsCard from '@/components/dashboard/FailedAttemptsCard';
 
 export default function Dashboard() {
   const { user, signOut } = useAuth();
@@ -250,12 +249,8 @@ export default function Dashboard() {
           </motion.div>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-6">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
-            <FailedAttemptsCard attempts={failedAttempts} />
-          </motion.div>
-
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="lg:col-span-2">
+        <div className="grid gap-6">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
             <LoginHistoryCard attempts={visibleAttempts} />
           </motion.div>
         </div>
