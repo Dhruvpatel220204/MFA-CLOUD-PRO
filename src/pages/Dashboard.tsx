@@ -24,13 +24,15 @@ export default function Dashboard() {
   const [sessions, setSessions] = useState<any[]>([]);
   const [trustScore, setTrustScore] = useState<{ score: number; level: 'low' | 'medium' | 'high' | 'critical' }>({ score: 50, level: 'medium' });
 
+  const normalizeEmail = (value?: string | null) => value?.trim().toLowerCase() ?? '';
+
   const loadData = useCallback(async () => {
     if (!user) return;
 
     const [profileRes, devicesRes, loginsRes, sessionsRes] = await Promise.all([
       supabase.from('profiles').select('*').eq('user_id', user.id).single(),
       supabase.from('devices').select('*').eq('user_id', user.id).order('last_seen', { ascending: false }),
-      supabase.from('login_attempts').select('*').or(`user_id.eq.${user.id},email.eq.${user.email}`).order('created_at', { ascending: false }).limit(50),
+      supabase.from('login_attempts').select('*').or(`user_id.eq.${user.id},email.eq.${normalizeEmail(user.email)}`).order('created_at', { ascending: false }).limit(50),
       supabase.from('user_sessions').select('*').eq('user_id', user.id).order('last_active', { ascending: false }),
     ]);
 
@@ -115,7 +117,7 @@ export default function Dashboard() {
           event: 'INSERT',
           schema: 'public',
           table: 'login_attempts',
-          filter: `email=eq.${user.email}`,
+           filter: `email=eq.${normalizeEmail(user.email)}`,
         },
         (payload) => {
           const attempt = payload.new as any;
@@ -178,8 +180,13 @@ export default function Dashboard() {
     toast.success('Session ended');
   };
 
-  const failedLogins = loginAttempts.filter(a => !a.success).length;
-  const failedAttempts = loginAttempts.filter(a => !a.success);
+  const normalizedUserEmail = normalizeEmail(user?.email);
+  const visibleAttempts = loginAttempts.filter((attempt) => {
+    const attemptEmail = normalizeEmail(attempt.email);
+    return attempt.user_id === user?.id || (!!normalizedUserEmail && attemptEmail === normalizedUserEmail);
+  });
+  const failedAttempts = visibleAttempts.filter(a => !a.success);
+  const failedLogins = failedAttempts.length;
 
   return (
     <div className="min-h-screen bg-background scan-line">
@@ -223,7 +230,7 @@ export default function Dashboard() {
           <SecurityOverview
             mfaEnabled={profile?.mfa_enabled || false}
             totalDevices={devices.length}
-            totalLogins={loginAttempts.length}
+              totalLogins={visibleAttempts.length}
             failedLogins={failedLogins}
           />
         </motion.div>
@@ -249,7 +256,7 @@ export default function Dashboard() {
           </motion.div>
 
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="lg:col-span-2">
-            <LoginHistoryCard attempts={loginAttempts} />
+            <LoginHistoryCard attempts={visibleAttempts} />
           </motion.div>
         </div>
 
