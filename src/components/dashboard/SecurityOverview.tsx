@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Shield, Fingerprint, Activity, Lock, Smartphone } from 'lucide-react';
+import { Shield, Fingerprint, Activity, AlertTriangle, Lock, Smartphone } from 'lucide-react';
 
 interface SecurityOverviewProps {
   mfaEnabled: boolean;
@@ -25,6 +25,13 @@ export default function SecurityOverview({ mfaEnabled, totalDevices, totalLogins
       bg: 'bg-accent/10',
     },
     {
+      label: 'Failed Attempts',
+      value: failedLogins.toString(),
+      icon: AlertTriangle,
+      color: failedLogins > 0 ? 'text-destructive' : 'text-success',
+      bg: failedLogins > 0 ? 'bg-destructive/10' : 'bg-success/10',
+    },
+    {
       label: 'Login Success',
       value: totalLogins > 0 ? `${Math.round(((totalLogins - failedLogins) / totalLogins) * 100)}%` : 'N/A',
       icon: Activity,
@@ -34,7 +41,7 @@ export default function SecurityOverview({ mfaEnabled, totalDevices, totalLogins
   ];
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
       {stats.map((stat, index) => (
         <motion.div
           key={stat.label}
